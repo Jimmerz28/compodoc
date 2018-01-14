@@ -59,30 +59,43 @@ describe('CLI coverage report', () => {
 
     });
 
-    describe('coverage test command under', () => {
+    describe('coverage test command under with error', () => {
 
-        let stdoutString = undefined;
-        before(function (done) {
-            tmp.create();
-            let ls = shell('node', [
-                '../bin/index-cli.js',
-                '-p', '../test/src/sample-files/tsconfig.simple.json',
+        const command = shell(
+            'node', [
+                `./bin/index-cli.js`,
+                '-p', './test/src/sample-files/tsconfig.simple.json',
                 '--coverageTest', '40',
-                '-d', '../' + tmp.name + '/'], { cwd: tmp.name, env });
+                '--coverageTestThresholdFail=true'
+            ]
+        );
 
-            if (ls.stderr.toString() !== '') {
-                console.error(`shell error: ${ls.stderr.toString()}`);
-                done('error');
-            }
-            stdoutString = ls.stdout.toString();
-            done();
-        });
-        after(() => tmp.clean());
-
-        it('it should not be over threshold', () => {
-            expect(stdoutString).to.contain('is not over threshold');
+        it('should return the proper exit status', () => {
+            expect(command.status).to.equal(1);
         });
 
+        it('should not be over the threshold', () => {
+            expect(`${command.stdout}`).to.contain('is not over threshold');
+        });
+    });
+
+    describe('coverage test command under with warning', () => {
+        const command = shell(
+            'node', [
+                `./bin/index-cli.js`,
+                '-p', './test/src/sample-files/tsconfig.simple.json',
+                '--coverageTest', '40',
+                '--coverageTestThresholdFail=false'
+            ]
+        );
+
+        it('should return the proper exit status', () => {
+            expect(command.status).to.equal(0);
+        });
+
+        it('should not be over the threshold', () => {
+            expect(`${command.stdout}`).to.contain('is not over threshold');
+        });
     });
 
     describe('coverage test per file command under', () => {

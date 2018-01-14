@@ -1432,9 +1432,15 @@ export class Application {
                     generationPromiseResolve();
                     process.exit(0);
                 } else {
-                    logger.error(`Documentation coverage (${coverageData.count}%) is not over threshold`);
-                    generationPromiseReject();
-                    process.exit(1);
+                    if (this.configuration.mainData.coverageTestThresholdFail) {
+                        logger.error(`Documentation coverage (${coverageData.count}%) is not over threshold`);
+                        generationPromiseReject();
+                        process.exit(1);
+                    } else {
+                        logger.warn(`Documentation coverage (${coverageData.count}%) is not over threshold`);
+                        generationPromiseResolve();
+                        process.exit(0);
+                    }
                 }
             } else if (!this.configuration.mainData.coverageTest && this.configuration.mainData.coverageTestPerFile) {
                 coverageTestPerFileResults = processCoveragePerFile();
