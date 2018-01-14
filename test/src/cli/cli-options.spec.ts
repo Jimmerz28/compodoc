@@ -102,6 +102,11 @@ describe('CLI Options', () => {
             expect(runHelp.stdout.toString()).to.contain('Test command of documentation coverage with a threshold');
         });
 
+        it(`--coverageTestThresholdFail`, () => {
+            expect(runHelp.stdout.toString()).to.contain('--coverageTestThresholdFail [true|false]');
+            expect(runHelp.stdout.toString()).to.contain('If an error should be thrown when documentation threshold is not met (default true)');
+        });
+
         it(`--disableSourceCode`, () => {
             expect(runHelp.stdout.toString()).to.contain('--disableSourceCode');
             expect(runHelp.stdout.toString()).to.contain('Do not add source code tab');

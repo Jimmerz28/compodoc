@@ -1424,6 +1424,7 @@ export class Application {
             files = _.sortBy(files, ['coveragePercent']);
 
             let coverageTestPerFileResults;
+
             if (this.configuration.mainData.coverageTest && !this.configuration.mainData.coverageTestPerFile) {
                 // Global coverage test and not per file
                 if (coverageData.count >= this.configuration.mainData.coverageTestThreshold) {
